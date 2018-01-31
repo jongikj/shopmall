@@ -24,11 +24,11 @@
 					</tfoot>
 				</table>
 			</div>
-			<div style="text-align: center; padding-top: 30px;">
-				<span>* 구매목록은 쿠키로 저장되며 브라우저 종료시 삭제됩니다.</span>
+			<div id="buy_info" style="text-align: center; padding-top: 30px;">
+				<span>* 구매목록은 쿠키로 저장되며 브라우저 종료시 혹은 구매하기 완료시 삭제됩니다.</span>
 			</div>
 			<div id="shop_buy_comment" style="text-align: center; padding-top: 40px">
-				<textarea style="width: 70%; margin-bottom: 10px;" rows="4" cols="4">
+				<textarea style="width: 70%; margin-bottom: 10px;" rows="4" cols="4" readonly>
 【구매 이용 약관】
 
 얼마나 속에서 열매를 청춘에서만 아니다. 천고에 바이며, 우리의 긴지라 못할 가진 피어나기 영락과 봄바람이다. 산야에 그것을 이상은 보배를 인생의 주며, 봄날의 황금시대를 뿐이다. 영락과 주는 구하기 가치를 인간에 청춘의 맺어, 이상 목숨을 봄바람이다. 있을 싹이 역사를 심장의 사랑의 되려니와, 것이다. 무엇을 청춘을 피부가 유소년에게서 동력은 그들은 쓸쓸한 속에서 끓는다. 장식하는 얼마나 내는 목숨이 실로 곧 얼마나 뼈 이것이야말로 말이다. 우리의 온갖 장식하는 이상의 원대하고, 산야에 피고, 이것이다. 안고, 피에 이상의 위하여서 피다.
@@ -62,20 +62,6 @@
 </section>
 <script src="/web/resources/js/main.js"></script>
 <script>
-window.onload = function() {
-/* 	$.ajax({
-		url : '/web/shop/resultPrice',
-		data : {price : rmComma($('#hd_buy_price').val())},
-		success : function(data) {
-			alert('성공');
-			alert(data.count);
-		},
-		error : function(x ,s ,m) {
-			alert('에러 발생');
-		}
-	}); */
-}
-
 $(function() { 
 	var cookie = $.cookie();
 	var buy_list = "";
@@ -101,8 +87,6 @@ $(function() {
 			seq = parseInt(item_split[0]);
 			count = parseInt(item_split[1]);
 			
-			console.log('키 : ' + i + ', 밸류 : ' + item);
-			
 			$.ajax({
 				url : '/web/shop/readBuy',
 				type : 'post',
@@ -114,7 +98,7 @@ $(function() {
 					buy_list += 
 						'<tr style="text-align: center">'
 						+	'<td><img style="height: 100px;" src="/web/resources/img/title/'+data.image+'" alt="'+data.image+'"></td>'
-						+	'<td style="text-align: left;">'+data.title+'<input id="hd_count'+flag+'" type="hidden" value="'+data.count+'"></td>'
+						+	'<td style="text-align: left;">'+data.title+'<input id="hd_count'+flag+'" type="hidden" value="'+data.count+'"><input id="hd_seq'+flag+'" type="hidden" value="'+data.seq+'"></td>'
 						+	'<td><i id="minus'+flag+'" class="count glyphicon glyphicon-minus-sign" onclick="countMinus('+flag+', '+data.seq+')"></i><input id="buy_count'+flag+'" onkeyup="priceCount('+flag+', '+data.seq+')" style="width: 40px; text-align: center; margin: 0 5px;" type="text" value="'+count+'" data-toggle="tooltip'+flag+'" data-placement="top" title="'+data.count+'개 까지 구매가능"/><i id="plus'+flag+'" class="count glyphicon glyphicon-plus-sign" onclick="countPlus('+flag+', '+data.seq+')"></i></td>'
 						+	'<td><span id="buy_price'+flag+'">'+priceComma(price)+'</span><input id="hd_price'+flag+'" value="'+data.price+'" type="hidden"></td>'
 						+	'<td><i id="buy_remove'+flag+'" class="count glyphicon glyphicon-remove" onclick="removeBuy(\''+ i +'\')"></i></td>'
@@ -123,7 +107,6 @@ $(function() {
 					flag++;
 					
 					$('#shop_buy_tbody').html(buy_list);
-					
 				},
 				error : function(x, s, m) {
 					alert('구매목록 불러우는 중 에러 발생');
@@ -131,6 +114,20 @@ $(function() {
 			});
 		});
 	}
+	
+	$.ajax({
+		url : '/web/member/session',
+		success : function(session) {
+			if(session.id === null) {
+				$('#buy_info').append('<br><span>* 현재 <span style="color: blue;">비회원 구매 상태</span> 입니다. 이메일을 입력해주세요.</span><br>');
+				$('#buy_info').append('<p class="faq_title">이메일 :</p><input id="not_logined_email" type="text" style="width: 250px; padding: 0 5px; margin-top: 20px;">');
+			}
+		},
+		error : function(x, s, m) {
+			alert('구매하기 세션 체크 중 에러 발생');
+		}
+	});
+	
 	var result_price = 0;
 	
 	for(i=1; i<flag; i++) {
@@ -158,7 +155,57 @@ $(function() {
 			$.ajax({
 				url : '/web/shop/getResultPrice',
 				success : function(data) {
-					alert(data.count);
+					$.ajax({
+						url : '/web/member/session',
+						success : function(session) {
+							var _flag = 1; // flag가 1이면 구매하기 진행
+							
+							if(session.id == null) { // 비회원 구매
+								var regEmail = /[0-9a-zA-Z][_0-9a-zA-Z-]*@[_0-9a-zA-Z-]+(\.[_0-9a-zA-Z-]+){1,2}$/;
+								
+								if(!regEmail.test($('#not_logined_email').val()) || $('#not_logined_email').val().length > 40) {
+									_flag = 0;
+									alert('이메일은 양식에 맞게 40자 이내로 입력해주세요.');
+								}
+							} // check session if.
+							
+							if(_flag == 1) {
+								var buy_arr  = new Array();	
+								var json_buy_arr;
+								var temp;
+								
+								for(i=0; i<flag-1; i++) {
+									temp = i + 1;
+									buy_arr[i] = ''+$('#hd_seq'+temp+'').val()+','+$('#buy_count'+temp+'').val()+'';
+								}
+								
+								buy_arr[buy_arr.length] =  priceComma(returnPrice());
+								
+								for(i=0; i<buy_arr.length; i++) {
+									console.log(buy_arr[i]);
+								}	// 디버깅용 로그
+								
+								$.ajax({
+									url : '/web/shop/setBuyList',
+									type : 'post',
+									contentType : 'application/json',
+									data : JSON.stringify(buy_arr),
+									success : function(fin) { 
+									//	location.href = '/web/shop/goBuyFinList';
+									},
+									error : function(x, s, m) {
+										console.log('컨트롤러 전달 실패..');
+										console.log(JSON.stringify(x));
+										console.log(s);
+										console.log(m);
+									}
+								});
+							}
+						},
+						error : function(x, s, m) {
+							alert('구매하기 세션 읽는 중 에러 발생');
+						}
+					});
 				},
 				error : function(x, s, m) {
 					alert('구매하는 중 에러 발생');

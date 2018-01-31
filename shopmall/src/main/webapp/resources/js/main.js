@@ -443,3 +443,30 @@ function countPlus(flag, seq) {
 		}
 	});
 }
+
+function returnPrice() {
+	var price;
+	
+ 	$.ajax({
+		url : '/web/shop/getResultPrice',
+		async : false,
+		success : function(data) {
+			price = data.count;
+		},
+		error : function(x ,s ,m) {
+			alert('error : Session price');
+		}
+	}); 
+ 	
+ 	return price;
+}
+
+var finBuyList = {
+		buy_arr : buy_arr = new Array(),
+		setBuyArr : function(param) {
+			buy_arr = param;
+		},
+		getBuyArr : function() {
+			return buy_arr;
+		}
+}

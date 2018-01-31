@@ -1,5 +1,7 @@
 package com.shopmall.web.controllers;
 
+import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
@@ -11,7 +13,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -39,6 +43,12 @@ public class ShopController {
 	public String goBuy(){
 		logger.info("shopController : {}", "goBuy");
 		return "public:shop/buy.tiles";
+	}
+	
+	@RequestMapping("buyFin")
+	public String goBuyFin() {
+		logger.info("shopController : {}", "goBuyFin");
+		return "public:shop/buy_fin.tiles";
 	}
 	
 	@RequestMapping("/selectDesc")
@@ -171,7 +181,13 @@ public class ShopController {
 	
 	@RequestMapping("/resultPrice")
 	public @ResponseBody Retval resultPrice(HttpSession session, @RequestParam int price) {
-		logger.info("total price : {}", price);
+		try{
+	      InetAddress local = InetAddress.getLocalHost();
+	      logger.info(local.getHostAddress() + " total price : {}", price);
+	    }catch(Exception e){
+	      System.out.println(e.getMessage());
+	    }
+
 		retval.setCount(price);
 		session.setAttribute("price", retval);
 		return (Retval)session.getAttribute("price");
@@ -181,5 +197,37 @@ public class ShopController {
 	public @ResponseBody Retval getResultPrice(HttpSession session) {
 		logger.info("shopController : {}", "getResultPrice");
 		return (Retval)session.getAttribute("price");
+	}
+	
+	@RequestMapping("goBuyFinList")
+	public String buyFinList() {
+		logger.info("shopController : {}", "goBuyFinList");
+		return "public:shop/buy_fin.tiles";
+	}
+	
+	@RequestMapping(value="/setBuyList", method=RequestMethod.POST)
+	public @ResponseBody Retval setBuyList(@RequestBody String[] buy_arr, Model model) {
+		logger.info("shopController : {}", "setBuyList");
+		String[] temp = new String[buy_arr.length - 1];
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		for(int i=0; i<=buy_arr.length-2; i++) {
+			temp = buy_arr[i].split(",");
+			map.put("seq" + temp[i], buy_arr[i]);
+		}
+		
+		map.put("total_price", buy_arr[buy_arr.length - 1]);
+		model.addAttribute("buyList", map);
+		model.addAttribute("test", 1);
+		
+		retval.setMsg("set complete");
+		return retval;
+	}
+	
+	@RequestMapping("/getBuyList")
+	public @ResponseBody HashMap<String, Object> getBuyList(Model model) {
+		logger.info("shopController : {}", "getBuyList");
+		
+		return null;
 	}
 }
