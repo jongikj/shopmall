@@ -19,7 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionAttributeStore;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopmall.web.constants.Values;
 import com.shopmall.web.domains.Command;
@@ -30,7 +34,7 @@ import com.shopmall.web.util.Pagination;
 
 @Controller
 @Lazy
-@SessionAttributes({"price", "user", "context", "css", "img", "js","temp"})
+@SessionAttributes({"price", "result", "user", "context", "css", "img", "js", "temp"})
 @RequestMapping("/shop")
 public class ShopController {
 	private static final Logger logger = LoggerFactory.getLogger(ShopController.class);
@@ -51,6 +55,12 @@ public class ShopController {
 		return "public:shop/buy_fin.tiles";
 	}
 	
+	@RequestMapping("/wishlist")
+	public String goWishlist() {
+		logger.info("shopController : {}", "goWishlist");
+		return "public:shop/wishlist.tiles";
+	}
+	
 	@RequestMapping("/selectDesc")
 	public @ResponseBody HashMap<String, Object> selectDesc(){
 		logger.info("ShopController GO TO {}", "selectDesc");
@@ -67,7 +77,7 @@ public class ShopController {
 		return map;
 	}
 
-	@RequestMapping("selectGenreDesc/{keyword}")
+	@RequestMapping("/selectGenreDesc/{keyword}")
 	public @ResponseBody HashMap<String, Object> selectGenreDesc(@RequestParam String keyword){
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("list", service.selectGenreDesc());
@@ -196,7 +206,7 @@ public class ShopController {
 	@RequestMapping("/getResultPrice")
 	public @ResponseBody Retval getResultPrice(HttpSession session) {
 		logger.info("shopController : {}", "getResultPrice");
-		return (Retval)session.getAttribute("price");
+		return retval;
 	}
 	
 	@RequestMapping("goBuyFinList")
@@ -206,28 +216,61 @@ public class ShopController {
 	}
 	
 	@RequestMapping(value="/setBuyList", method=RequestMethod.POST)
-	public @ResponseBody Retval setBuyList(@RequestBody String[] buy_arr, Model model) {
-		logger.info("shopController : {}", "setBuyList");
-		String[] temp = new String[buy_arr.length - 1];
+	public String setBuyList(@RequestBody String[] buy_arr, RedirectAttributes redirect) {
+		logger.info("shopController : {}", "setBuyList");		
+		String[] temp = new String[3];
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
-		for(int i=0; i<=buy_arr.length-2; i++) {
+		for(int i=0; i<=buy_arr.length-2; i++) { // put seq, count
 			temp = buy_arr[i].split(",");
-			map.put("seq" + temp[i], buy_arr[i]);
+			ShopDTO obj = new ShopDTO();
+			command.setSeq(Integer.parseInt(temp[0]));
+			obj.setTitle(service.readBuy(command).getTitle());
+			obj.setCount(Integer.parseInt(temp[1]));
+			obj.setPrice(service.readBuy(command).getPrice() * obj.getCount());	
+			obj.setImage(service.readBuy(command).getImage());	
+			map.put("item" + i, obj.getTitle() + "|" + obj.getCount() + "|" + obj.getPrice() + "|" + obj.getImage() + "|" + i);
+		}	
+		 
+		map.put("total_price", buy_arr[buy_arr.length - 1]); // put total price
+		
+		for(int i=0; i<=map.size()-2; i++) {
+			System.out.println(i + "번 : " + map.get("item" + i));
 		}
 		
-		map.put("total_price", buy_arr[buy_arr.length - 1]);
-		model.addAttribute("buyList", map);
-		model.addAttribute("test", 1);
+		System.out.println("가격  : " + map.get("total_price"));
+		redirect.addFlashAttribute("result", map);
+		return "redirect:/shop/goBuyFinList";
+	}
+
+	@RequestMapping("/getBuyList")
+	public @ResponseBody HashMap<String, Object> getBuyList(HttpSession session) {
+		logger.info("shopController : {}", "getBuyList");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map = (HashMap<String, Object>) session.getAttribute("result");
+		return map;
+	}
+	
+	@RequestMapping("/updateCount")
+	public @ResponseBody Retval updateCount(@RequestParam int count, @RequestParam int seq) {
+		logger.info("shopController : {}", "updateCount");
+		command.setCount(count);
+		command.setSeq(seq);
 		
-		retval.setMsg("set complete");
+		if(service.updateCount(command) == 1) {
+			retval.setMsg("updateCount success");
+		} else {
+			retval.setMsg("updateCount fail");
+		}
+		
 		return retval;
 	}
 	
-	@RequestMapping("/getBuyList")
-	public @ResponseBody HashMap<String, Object> getBuyList(Model model) {
-		logger.info("shopController : {}", "getBuyList");
-		
-		return null;
+	@RequestMapping("/initPrice")
+	public @ResponseBody Retval initPrice(HttpSession session) {
+		retval.setCount(0);
+		retval.setMsg("price init");
+		session.setAttribute("price", retval);
+		return retval;
 	}
 }

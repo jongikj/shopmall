@@ -97,4 +97,10 @@ public class MemberServiceImpl implements MemberService {
 		MemberMapper mapper = sqlSession.getMapper(MemberMapper.class);
 		return mapper.countSellLog(command);
 	}
+
+	@Override
+	public int insertSellLog(Command command) {
+		MemberMapper mapper = sqlSession.getMapper(MemberMapper.class);
+		return mapper.insertSellLog(command);
+	}
 }

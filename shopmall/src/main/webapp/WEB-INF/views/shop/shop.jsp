@@ -57,25 +57,45 @@
 		console.log('총 페이지 수  : ' + totPage);
 		console.log('현재 페이지  : ' + pgNum);
 		$.each(data.list, function(i, item){
-	 		sell_list +=
-				'<div class="col-sm-4">'
-		+			'<div class="product-image-wrapper">'
-		+				'<div>'
-		+					'<div class="productinfo text-center">'
-		+						'<a href="/web/shop/selectOneSeq/' + item.seq + '"><img src="/web/resources/img/title/' + item.image + '" alt="'+item.image+'" /></a>'
-		+						'<h2>￦' + item.price + '</h2>'
-		+						'<p><a href="#" style="color: #696763;">' + item.title + '</a></p>'
-		+						'<a href="/web/shop/selectOneSeq/' + item.seq + '" class="btn btn-default add-to-cart"><i'
-		+							'class="fa fa-shopping-cart"></i>구매하기</a>'
-		+					'</div>'
-		+				'</div>'
-		+				'<div class="choose">'
-		+					'<ul class="nav nav-pills nav-justified">'
-		+						'<li><a href="#"><i class="fa fa-plus-square"></i>위시리스트에 담기</a></li>'
-		+					'</ul>'
-		+				'</div>'
-		+			'</div>'
-		+		'</div>'; 
+			if(item.count == 0) {
+		 		sell_list +=
+					'<div class="col-sm-4">'
+			+			'<div class="product-image-wrapper">'
+			+				'<div>'
+			+					'<div class="productinfo text-center">'
+			+						'<a href="/web/shop/selectOneSeq/' + item.seq + '"><img src="/web/resources/img/title/' + item.image + '" alt="'+item.image+'" /></a>'
+			+						'<h2>￦' + priceComma(item.price) + '</h2>'
+			+						'<p><a href="/web/shop/selectOneSeq/' + item.seq + '" style="color: #696763;">' + item.title + '</a></p>'
+			+						'<a style="cursor: default;" class="btn btn-default add-to-cart"><i class="glyphicon glyphicon-remove"></i>품절</a>'
+			+					'</div>'
+			+				'</div>'
+			+				'<div class="choose">'
+			+					'<ul class="nav nav-pills nav-justified">'
+			+						'<li><a href="#"><i class="fa fa-plus-square"></i>위시리스트에 담기</a></li>'
+			+					'</ul>'
+			+				'</div>'
+			+			'</div>'
+			+		'</div>'; 
+			} else {
+		 		sell_list +=
+					'<div class="col-sm-4">'
+			+			'<div class="product-image-wrapper">'
+			+				'<div>'
+			+					'<div class="productinfo text-center">'
+			+						'<a href="/web/shop/selectOneSeq/' + item.seq + '"><img src="/web/resources/img/title/' + item.image + '" alt="'+item.image+'" /></a>'
+			+						'<h2>￦' + priceComma(item.price) + '</h2>'
+			+						'<p><a href="/web/shop/selectOneSeq/' + item.seq + '" style="color: #696763;">' + item.title + '</a></p>'
+			+						'<a onclick="addBuy('+ item.seq +', 1)" href="/web/shop/buy"' + item.seq + '" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>구매하기</a>'
+			+					'</div>'
+			+				'</div>'
+			+				'<div class="choose">'
+			+					'<ul class="nav nav-pills nav-justified">'
+			+						'<li><a href="#"><i class="fa fa-plus-square"></i>위시리스트에 담기</a></li>'
+			+					'</ul>'
+			+				'</div>'
+			+			'</div>'
+			+		'</div>'; 	
+			}
 		});
 		
 		pagination += '<ul class="pagination">';

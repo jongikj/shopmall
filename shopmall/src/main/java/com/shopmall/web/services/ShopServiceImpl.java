@@ -14,6 +14,7 @@ import com.shopmall.web.domains.Command;
 import com.shopmall.web.domains.DetailImageDTO;
 import com.shopmall.web.domains.Retval;
 import com.shopmall.web.domains.ShopDTO;
+import com.shopmall.web.mappers.MemberMapper;
 import com.shopmall.web.mappers.ShopMapper;
 
 @Service
@@ -96,5 +97,9 @@ public class ShopServiceImpl implements ShopService {
 		ShopMapper mapper = sqlSession.getMapper(ShopMapper.class);
 		return mapper.checkCount(command);
 	}
-		
+
+	@Override
+	public int updateCount(Command command) {
+		return (sqlSession.getMapper(ShopMapper.class).updateCount(command) != 0) ? 1 : 0;
+	}
 }

@@ -29,7 +29,7 @@ import com.shopmall.web.util.Pagination;
 
 @Controller
 @Lazy
-@SessionAttributes({"user", "context", "css", "img", "js","temp"})
+@SessionAttributes({"price", "user", "context", "css", "img", "js","temp"})
 @RequestMapping("/member")
 public class MemberController {
 	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -165,6 +165,29 @@ public class MemberController {
 		}else{
 			retval.setFlag(0);
 		}
+		return retval;
+	}
+	
+	@RequestMapping(value="/insertSellLog", method=RequestMethod.POST)
+	public @ResponseBody Retval insertSellLog(HttpSession session, @RequestBody String[] buy_arr) {
+		logger.info("MemberController GO TO {}", "insertSellLog");
+		MemberDTO member = (MemberDTO) session.getAttribute("user");
+		
+		if(member == null) { 
+			command.setKeyword("non-member");
+		} else {
+			command.setKeyword(member.getId());
+		}
+		
+		if(Integer.parseInt(buy_arr[0].split(",")[2]) == buy_arr.length) {
+			for(int i=0; i<=buy_arr.length-2; i++) {
+				command.setSeq(Integer.parseInt((buy_arr[i].split(",")[0])));
+				command.setCount(Integer.parseInt(buy_arr[i].split(",")[1]));
+				service.insertSellLog(command);
+			}	
+		}
+		
+		retval.setFlag(1);
 		return retval;
 	}
 }

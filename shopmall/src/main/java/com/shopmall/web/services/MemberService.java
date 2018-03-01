@@ -20,4 +20,5 @@ public interface MemberService {
 	public int update(MemberDTO member);
 	public List<MemberShopDTO> sellLog(Command command);
 	public int countSellLog(Command command);
+	public int insertSellLog(Command command);
 }

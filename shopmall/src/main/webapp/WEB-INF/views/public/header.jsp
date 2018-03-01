@@ -26,7 +26,7 @@
 							<ul class="nav navbar-nav">
 								<li><a><i class="glyphicon glyphicon-music"></i>${user.id} 님 환영합니다.</a></li>
 								<li><a href="/web/member/mypage"><i class="fa fa-user"></i>마이페이지</a></li>
-								<li><a href="#"><i class="fa fa-star"></i>내 위시리스트</a></li>
+								<li><a href="/web/shop/wishlist"><i class="fa fa-star"></i>내 위시리스트</a></li>
 								<li><a href="/web/shop/buy"><i class="fa fa-shopping-cart"></i>구매하기</a></li>
 								<li><a href="/web/member/logout"><i class="fa fa-lock"></i>로그아웃</a></li>
 							</ul>

@@ -12,5 +12,5 @@ import lombok.Setter;
 @Lazy
 public class Command {
 	@Getter @Setter private String keyField, keyword;
-	@Getter @Setter private int seq, start, end;
+	@Getter @Setter private int seq, count, start, end;
 }

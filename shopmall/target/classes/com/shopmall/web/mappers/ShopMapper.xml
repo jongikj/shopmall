@@ -53,4 +53,8 @@
 <select id="checkCount" parameterType="com.shopmall.web.domains.Command" resultType="int">
 	select count from sell_list where seq = #{seq};
 </select>
+
+<update id="updateCount" parameterType="com.shopmall.web.domains.Command">
+	update sell_list set count = count -${count} where seq = ${seq};
+</update>
 </mapper>

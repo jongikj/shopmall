@@ -27,6 +27,7 @@
 						<tr>
 							<th style="text-align: center">번호</th>
 							<th colspan="2" style="text-align: center;">타이틀</th>
+							<th style="text-align: center;">수량</th>
 							<th style="text-align: center;">가격</th>
 							<th style="text-align: center;">구매일</th>
 						</tr>
@@ -86,7 +87,8 @@ $(function() {
 				+		'<td>'+ item.seq +'</td>'
 				+		'<td><img style="width: 100px; margin-right: 15px;" alt="" src="/web/resources/img/title/'+ item.image +'"/></td>'
 				+		'<td>'+ item.title +'</td>'
-				+		'<td>'+ item.price +'</td>'
+				+		'<td>'+ item.count +'</td>'
+				+		'<td>'+ priceComma(item.price * item.count) +'</td>'
 				+		'<td>'+ date_split[0] +'</td>'
 				+	'</tr>';
 			});

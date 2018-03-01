@@ -23,7 +23,7 @@
 	select * from (select @NO := @NO + 1 as ROWNUM, A.*
 	from 
 	(
-	select @rownum:=@rownum+1 as seq, log.id, log.date, list.title, list.image, list.price
+	select @rownum:=@rownum+1 as seq, log.id, log.date, log.count, list.title, list.image, list.price
 	from sell_log as log inner join sell_list as list
 	on log.seq_sell_list = list.seq, (select @rownum:=0) temp
 	where id = #{keyword} order by seq desc
@@ -31,6 +31,10 @@
 	(select @NO := 0) B )C
 	where C.ROWNUM BETWEEN ${start} and ${end};	
 </select>
+
+<insert id="insertSellLog" parameterType="com.shopmall.web.domains.Command">
+	insert into sell_log (seq_sell_list, id, count) values (${seq}, #{keyword}, ${count});
+</insert>
 
 <select id="countSellLog" parameterType="com.shopmall.web.domains.Command" resultType="int">
 	select count(*)

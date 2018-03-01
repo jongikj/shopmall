@@ -293,7 +293,7 @@ function priceCount(flag, seq) {
 	var regNumber = /^[0-9]*$/;
 	var result = 0;
 	var price = $('#buy_count'+flag+'').val() * $('#hd_price'+flag+'').val();
-	
+
 	$('[data-toggle="tooltip'+flag+'"]').tooltip('show');
 	
 	$.ajax({
@@ -305,7 +305,12 @@ function priceCount(flag, seq) {
 					$('#buy_count'+flag+'').val(data.count);
 					price = $('#buy_count'+flag+'').val() * $('#hd_price'+flag+'').val();
 					$('#buy_price'+flag+'').text(priceComma(price));
-
+					
+					} else if($('#buy_count'+flag+'').val() == 0) {
+						$('#buy_count'+flag+'').val(1);
+						price = $('#buy_count'+flag+'').val() * $('#hd_price'+flag+'').val();
+						$('#buy_price'+flag+'').text(priceComma(price));
+						
 					} else if((!regNumber.test($('#buy_count'+flag+'').val()))) {
 						alert('숫자만 입력해주세요.');
 						$('#buy_count'+flag+'').val(1);

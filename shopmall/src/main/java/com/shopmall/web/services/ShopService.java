@@ -25,4 +25,5 @@ public interface ShopService {
 	public int countImage(Command command);
 	public List<DetailImageDTO> selectDetailImage(Command command);
 	public int checkCount(Command command);
+	public int updateCount(Command command);
 }

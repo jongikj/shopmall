@@ -18,4 +18,5 @@ public interface MemberMapper {
 	public int update(MemberDTO member);
 	public List<MemberShopDTO> sellLog(Command Command);
 	public int countSellLog(Command command);
+	public int insertSellLog(Command command);
 }

@@ -105,7 +105,8 @@
 		</bean>
 		<mvc:interceptors>
 			<mvc:interceptor>
-				<mvc:mapping path="/"/>
+				<!-- <mvc:mapping path="/"/> -->
+				<mvc:mapping path="/shop/wishlist"/>
 				<mvc:exclude-mapping path="/admin/*"/>
 				<bean class="com.shopmall.web.interceptors.LogInterceptor" />
 			</mvc:interceptor>

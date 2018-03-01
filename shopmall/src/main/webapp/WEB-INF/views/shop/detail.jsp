@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <section>
 	<div class="container">
 		<div class="row">
@@ -21,13 +22,20 @@
 						<div id="detail" class="product-information"><!--/product-information-->
 							<h3>${title}</h3>
 							<span>
-								<span>￦${price}</span>
-								<label>수량:</label>
-								<input type="text" value="1" />
-								<button type="button" class="btn btn-fefault cart">
-									<i class="fa fa-shopping-cart"></i>
-									구매하기
-								</button>
+								<span id="shop_detail_price"></span>
+								<c:set var="count" value="${count}"/>
+								<c:choose>
+								<c:when test="${count eq 0}">
+									<h2 style="margin-top: 50px;"><i class="glyphicon glyphicon-remove"></i><b> 품절되었습니다!</b></h2>
+								</c:when>
+								<c:otherwise>
+									<input id="detail_count" type="text" value="1" />
+									<button id="detail_buy" type="button" class="btn btn-fefault cart">
+										<i class="fa fa-shopping-cart"></i>
+										구매하기
+									</button>
+								</c:otherwise>
+								</c:choose>
 							</span>
 							<p><b>장르:</b> ${genre}</p>
 							<p><b>남은 수량:</b> ${count}</p>
@@ -110,5 +118,11 @@ $(function(){
 			});
 		}
 	});
+	$('#shop_detail_price').text('￦' + priceComma(${price}));
+});
+
+$('#detail_buy').click(function() {
+	addBuy(${seq}, $('#detail_count').val());
+	location.href = '/web/shop/buy';
 });
 </script>

@@ -27,7 +27,7 @@
 			<div id="buy_info" style="text-align: center; padding-top: 30px;">
 				<span>* 구매목록은 쿠키로 저장되며 브라우저 종료시 혹은 구매하기 완료시 삭제됩니다.</span>
 			</div>
-			<div id="shop_buy_comment" style="text-align: center; padding-top: 40px">
+			<div id="shop_buy_comment" style="text-align: center; padding: 40px">
 				<textarea style="width: 70%; margin-bottom: 10px;" rows="4" cols="4" readonly>
 【구매 이용 약관】
 
@@ -72,6 +72,7 @@ $(function() {
 	var count = 0;
 	var flag = 1;
 	var cookie_count = Object.keys(cookie).length;
+	var num = 1;
 	
 	if(cookie_count === 0) {
 		buy_list += 
@@ -81,6 +82,7 @@ $(function() {
 			
 		$('#shop_buy_comment').html("");
 		$('#shop_buy_tbody').html(buy_list);
+		
 	} else {
 		$.each(cookie, function(i, item) { // i - key, item - value, 쿠키를 가져와 구매 리스트를 출력.
 			item_split = item.split(', ');
@@ -95,15 +97,26 @@ $(function() {
 				success : function(data) {
 					var price = data.price * count;	//판매 가격과 구매 수량을  곱하여 처음부터 출력.
 					
-					buy_list += 
-						'<tr style="text-align: center">'
-						+	'<td><img style="height: 100px;" src="/web/resources/img/title/'+data.image+'" alt="'+data.image+'"></td>'
-						+	'<td style="text-align: left;">'+data.title+'<input id="hd_count'+flag+'" type="hidden" value="'+data.count+'"><input id="hd_seq'+flag+'" type="hidden" value="'+data.seq+'"></td>'
-						+	'<td><i id="minus'+flag+'" class="count glyphicon glyphicon-minus-sign" onclick="countMinus('+flag+', '+data.seq+')"></i><input id="buy_count'+flag+'" onkeyup="priceCount('+flag+', '+data.seq+')" style="width: 40px; text-align: center; margin: 0 5px;" type="text" value="'+count+'" data-toggle="tooltip'+flag+'" data-placement="top" title="'+data.count+'개 까지 구매가능"/><i id="plus'+flag+'" class="count glyphicon glyphicon-plus-sign" onclick="countPlus('+flag+', '+data.seq+')"></i></td>'
-						+	'<td><span id="buy_price'+flag+'">'+priceComma(price)+'</span><input id="hd_price'+flag+'" value="'+data.price+'" type="hidden"></td>'
-						+	'<td><i id="buy_remove'+flag+'" class="count glyphicon glyphicon-remove" onclick="removeBuy(\''+ i +'\')"></i></td>'
-						+'</tr>';
-						
+					if(data.count == 0) {
+						buy_list += 
+							'<tr style="text-align: center">'
+							+	'<td><img style="height: 100px;" src="/web/resources/img/title/'+data.image+'" alt="'+data.image+'"></td>'
+							+	'<td id="title'+flag+'" style="text-align: left;"><span style="text-decoration-line: line-through;">'+data.title+'</span><span style="margin-left: 5px; color: red;"><b>품절!</b></span><input id="hd_title'+flag+'" type="hidden" value="'+data.title+'"><input id="hd_count'+flag+'" type="hidden" value="'+data.count+'"><input id="hd_seq'+flag+'" type="hidden" value="'+data.seq+'"></td>'
+							+	'<td><i id="minus'+flag+'" class="count glyphicon glyphicon-minus-sign" onclick="countMinus('+flag+', '+data.seq+')"></i><input id="buy_count'+flag+'" onkeyup="priceCount('+flag+', '+data.seq+')" style="width: 40px; text-align: center; margin: 0 5px;" type="text" value="'+count+'" data-toggle="tooltip'+flag+'" data-placement="top" title="'+data.count+'개 까지 구매가능"/><i id="plus'+flag+'" class="count glyphicon glyphicon-plus-sign" onclick="countPlus('+flag+', '+data.seq+')"></i></td>'
+							+	'<td><span id="buy_price'+flag+'">'+priceComma(price)+'</span><input id="hd_price'+flag+'" value="'+data.price+'" type="hidden"></td>'
+							+	'<td><i id="buy_remove'+flag+'" class="count glyphicon glyphicon-remove" onclick="removeBuy(\''+ i +'\')"></i></td>'
+							+'</tr>';
+					} else {
+						buy_list += 
+							'<tr style="text-align: center">'
+							+	'<td><img style="height: 100px;" src="/web/resources/img/title/'+data.image+'" alt="'+data.image+'"></td>'
+							+	'<td id="title'+flag+'" style="text-align: left;">'+data.title+'<input id="hd_title'+flag+'" type="hidden" value="'+data.title+'"><input id="hd_count'+flag+'" type="hidden" value="'+data.count+'"><input id="hd_seq'+flag+'" type="hidden" value="'+data.seq+'"></td>'
+							+	'<td><i id="minus'+flag+'" class="count glyphicon glyphicon-minus-sign" onclick="countMinus('+flag+', '+data.seq+')"></i><input id="buy_count'+flag+'" onkeyup="priceCount('+flag+', '+data.seq+')" style="width: 40px; text-align: center; margin: 0 5px;" type="text" value="'+count+'" data-toggle="tooltip'+flag+'" data-placement="top" title="'+data.count+'개 까지 구매가능"/><i id="plus'+flag+'" class="count glyphicon glyphicon-plus-sign" onclick="countPlus('+flag+', '+data.seq+')"></i></td>'
+							+	'<td><span id="buy_price'+flag+'">'+priceComma(price)+'</span><input id="hd_price'+flag+'" value="'+data.price+'" type="hidden"></td>'
+							+	'<td><i id="buy_remove'+flag+'" class="count glyphicon glyphicon-remove" onclick="removeBuy(\''+ i +'\')"></i></td>'
+							+'</tr>';
+					}
+
 					flag++;
 					
 					$('#shop_buy_tbody').html(buy_list);
@@ -112,22 +125,37 @@ $(function() {
 					alert('구매목록 불러우는 중 에러 발생');
 				}
 			});
+			
+			$.ajax({
+				url : '/web/shop/readBuy',
+				type : 'post',
+				data : {seq : seq},
+				async : false,
+				success : function(data) {
+					if(data.count < $('#buy_count'+num+'').val()) {
+						$('#buy_count'+num+'').val(data.count);
+					}
+					num++;
+				},
+				error : function() {
+					alert('에러 발생');
+				}
+			});
+		});
+		
+		$.ajax({
+			url : '/web/member/session',
+			success : function(session) {
+				if(session.id === null) {
+					$('#buy_info').append('<br><span>* 현재 <span style="color: blue;">비회원 구매 상태</span> 입니다. 이메일을 입력해주세요.</span><br>');
+					$('#buy_info').append('<p class="faq_title">이메일 :</p><input id="not_logined_email" type="text" style="width: 250px; padding: 0 5px; margin-top: 20px;">');
+				}
+			},
+			error : function(x, s, m) {
+				alert('구매하기 세션 체크 중 에러 발생');
+			}
 		});
 	}
-	
-	$.ajax({
-		url : '/web/member/session',
-		success : function(session) {
-			if(session.id === null) {
-				$('#buy_info').append('<br><span>* 현재 <span style="color: blue;">비회원 구매 상태</span> 입니다. 이메일을 입력해주세요.</span><br>');
-				$('#buy_info').append('<p class="faq_title">이메일 :</p><input id="not_logined_email" type="text" style="width: 250px; padding: 0 5px; margin-top: 20px;">');
-			}
-		},
-		error : function(x, s, m) {
-			alert('구매하기 세션 체크 중 에러 발생');
-		}
-	});
-	
 	var result_price = 0;
 	
 	for(i=1; i<flag; i++) {
@@ -158,7 +186,7 @@ $(function() {
 					$.ajax({
 						url : '/web/member/session',
 						success : function(session) {
-							var _flag = 1; // flag가 1이면 구매하기 진행
+							var _flag = 1; // _flag가 1이면 구매하기 진행
 							
 							if(session.id == null) { // 비회원 구매
 								var regEmail = /[0-9a-zA-Z][_0-9a-zA-Z-]*@[_0-9a-zA-Z-]+(\.[_0-9a-zA-Z-]+){1,2}$/;
@@ -173,38 +201,92 @@ $(function() {
 								var buy_arr  = new Array();	
 								var json_buy_arr;
 								var temp;
+								var count_check = 0;
+								var sold_out_arr = new Array();
 								
-								for(i=0; i<flag-1; i++) {
-									temp = i + 1;
-									buy_arr[i] = ''+$('#hd_seq'+temp+'').val()+','+$('#buy_count'+temp+'').val()+'';
+								for(i=1; i<=flag-1; i++) {
+									$.ajax({	// 품절 여부 최종 확인
+										url : '/web/shop/readBuy',
+										data : {seq : $('#hd_seq'+i+'').val()},
+										async : false,
+										success : function(countCheck) {
+											if(countCheck.count == 0) {
+												alert('죄송합니다. 구매 중 \'' + countCheck.title + '\' 상품이 품절되었습니다.');
+												count_check = 1;
+											}
+										},
+										error : function() {
+											alert('품절 확인중 에러 발생');
+										}
+									});
 								}
 								
-								buy_arr[buy_arr.length] =  priceComma(returnPrice());
-								
-								for(i=0; i<buy_arr.length; i++) {
-									console.log(buy_arr[i]);
-								}	// 디버깅용 로그
-								
-								$.ajax({
-									url : '/web/shop/setBuyList',
-									type : 'post',
-									contentType : 'application/json',
-									data : JSON.stringify(buy_arr),
-									success : function(fin) { 
-									//	location.href = '/web/shop/goBuyFinList';
-									},
-									error : function(x, s, m) {
-										console.log('컨트롤러 전달 실패..');
-										console.log(JSON.stringify(x));
-										console.log(s);
-										console.log(m);
+								if(count_check != 1) {
+									for(i=0; i<flag-1; i++) {
+										temp = i + 1;
+										buy_arr[i] = ''+$('#hd_seq'+temp+'').val()+','+$('#buy_count'+temp+'').val()+','+flag+'';										
+										/* update_count_arr = {	// 구매 수량 증감 데이터 배열
+												count : $('#buy_count'+temp+'').val(),
+												seq : $('#hd_seq'+temp+'').val()
+										}; */
+										$.ajax({
+											url : '/web/shop/updateCount',	// 구매 수량 만큼 감소
+											type : 'post',
+											async : false,
+											//contentType : 'application/json',
+											//data : JSON.stringify(update_count_arr),
+											data : {
+												count : $('#buy_count'+temp+'').val(),
+												seq : $('#hd_seq'+temp+'').val(),
+											},
+											success : function() {
+												buy_arr[buy_arr.length] =  priceComma(returnPrice());
+												$.ajax({	
+													url : '/web/shop/setBuyList',
+													type : 'post',
+													async : false,
+													contentType : 'application/json',
+													data : JSON.stringify(buy_arr),
+													success : function(fin) { 
+														$.ajax({
+															url : '/web/member/insertSellLog',
+															type : 'post',
+															async : false,
+															contentType : 'application/json',
+															data : JSON.stringify(buy_arr),
+															success : function(buy_fin) {
+																var cookies = $.cookie();
+																for(var cookie in cookies) {
+																	$.removeCookie(cookie);
+																}
+															},
+															error : function(x, s, m) {
+																alert('insertSellLog 실패');
+															}
+														});
+													},
+													error : function(x, s, m) {
+														console.log('컨트롤러 전달 실패..');
+														console.log(JSON.stringify(x));
+														console.log(s);
+														console.log(m);
+													}
+												});	
+											},
+											error : function() {
+											}
+										});
 									}
-								});
+									$.getJSON('/web/shop/initPrice');	// 세션 금액 초기화
+									location.href = '/web/shop/goBuyFinList';
+								} else {
+									location.reload();
+								}
 							}
 						},
 						error : function(x, s, m) {
 							alert('구매하기 세션 읽는 중 에러 발생');
-						}
+						} 
 					});
 				},
 				error : function(x, s, m) {
