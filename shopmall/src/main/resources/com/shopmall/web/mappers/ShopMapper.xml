@@ -57,4 +57,28 @@
 <update id="updateCount" parameterType="com.shopmall.web.domains.Command">
 	update sell_list set count = count -${count} where seq = ${seq};
 </update>
+
+<insert id="addWishlist" parameterType="com.shopmall.web.domains.Command">
+	insert into basket (seq_sell_list, id) values (${seq}, #{id});
+</insert>
+
+<select id="selectWishOne" parameterType="com.shopmall.web.domains.Command" resultType="com.shopmall.web.domains.MemberShopDTO">
+	select * from basket where id = #{id} and seq_sell_list = ${seq};
+</select>
+
+<select id="selectWishAll" parameterType="com.shopmall.web.domains.Command" resultType="com.shopmall.web.domains.MemberShopDTO">
+	select * from 
+	sell_list as s
+	inner join
+	basket as b
+	on s.seq = b.seq_sell_list where id = #{id};
+</select>
+
+<select id="wishCount" parameterType="com.shopmall.web.domains.Command" resultType="int">
+	select count(*) from basket where id = #{id};
+</select>
+
+<delete id="deleteWish" parameterType="com.shopmall.web.domains.Command">
+	delete from basket where id = #{id} and seq_sell_list = ${seq};
+</delete>
 </mapper>

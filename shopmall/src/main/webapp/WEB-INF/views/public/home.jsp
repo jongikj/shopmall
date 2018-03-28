@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <section id="slider">
-	<!--slider-->
-	<div class="container">
+	<div class="container" style="width: 100%;">
 		<div class="row">
 			<div class="col-sm-12">
 				<div id="slider-carousel" class="carousel slide"
@@ -12,66 +11,23 @@
 						<li data-target="#slider-carousel" data-slide-to="1"></li>
 						<li data-target="#slider-carousel" data-slide-to="2"></li>
 					</ol>
-
 					<div class="carousel-inner">
 						<div class="item active">
 							<div class="col-sm-6">
-								<h1>
-									<span>E</span>-SHOPPER
-								</h1>
-								<h2>Free E-Commerce Template</h2>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-									sed do eiusmod tempor incididunt ut labore et dolore magna
-									aliqua.</p>
-								<button type="button" class="btn btn-default get">Get
-									it now</button>
-							</div>
-							<div class="col-sm-6">
-								<img src="resources/img/home/girl1.jpg" class="girl img-responsive"
-									alt="" /> <img src="resources/img/home/pricing.png" class="pricing"
-									alt="" />
+								<img src="/web/resources/img/home/banner1.jpg">
 							</div>
 						</div>
 						<div class="item">
 							<div class="col-sm-6">
-								<h1>
-									<span>E</span>-SHOPPER
-								</h1>
-								<h2>100% Responsive Design</h2>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-									sed do eiusmod tempor incididunt ut labore et dolore magna
-									aliqua.</p>
-								<button type="button" class="btn btn-default get">Get
-									it now</button>
-							</div>
-							<div class="col-sm-6">
-								<img src="resources/img/home/girl2.jpg" class="girl img-responsive"
-									alt="" /> <img src="resources/img/home/pricing.png" class="pricing"
-									alt="" />
+								<img src="/web/resources/img/home/banner2.jpg">
 							</div>
 						</div>
-
 						<div class="item">
 							<div class="col-sm-6">
-								<h1>
-									<span>E</span>-SHOPPER
-								</h1>
-								<h2>Free Ecommerce Template</h2>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-									sed do eiusmod tempor incididunt ut labore et dolore magna
-									aliqua.</p>
-								<button type="button" class="btn btn-default get">Get
-									it now</button>
-							</div>
-							<div class="col-sm-6">
-								<img src="resources/img/home/girl3.jpg" class="girl img-responsive"
-									alt="" /> <img src="resources/img/home/pricing.png" class="pricing"
-									alt="" />
+								<img src="/web/resources/img/home/banner3.jpg">
 							</div>
 						</div>
-
 					</div>
-
 					<a href="#slider-carousel" class="left control-carousel hidden-xs"
 						data-slide="prev"> <i class="fa fa-angle-left"></i>
 					</a> <a href="#slider-carousel"
@@ -79,13 +35,10 @@
 						class="fa fa-angle-right"></i>
 					</a>
 				</div>
-
 			</div>
 		</div>
 	</div>
 </section>
-<!--/slider-->
-
 <section>
 	<div class="container">
 		<div class="row">
@@ -97,7 +50,6 @@
 					</div>
 				</div>
 			</div>
-
 			<div class="col-sm-9 padding-right">
 				<div class="features_items">
 					<h2 class="title text-center">최신 상품</h2>
@@ -114,122 +66,20 @@
 					</div>
 				</div>
 				<!--/category-tab-->
-
-				<div class="recommended_items">
-					<!--recommended_items-->
-					<h2 class="title text-center">recommended items</h2>
-
-					<div id="recommended-item-carousel" class="carousel slide"
-						data-ride="carousel">
-						<div class="carousel-inner">
-							<div class="item active">
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="resources/img/home/recommend1.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="resources/img/home/recommend2.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="resources/img/home/recommend3.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="item">
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="resources/img/home/recommend1.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="resources/img/home/recommend2.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="resources/img/home/recommend3.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<a class="left recommended-item-control"
-							href="#recommended-item-carousel" data-slide="prev"> <i
-							class="fa fa-angle-left"></i>
-						</a> <a class="right recommended-item-control"
-							href="#recommended-item-carousel" data-slide="next"> <i
-							class="fa fa-angle-right"></i>
-						</a>
-					</div>
 				</div>
-				<!--/recommended_items-->
-
-			</div>
 			</div>
 		</div>
 	</div>
 </section>
+<script src="/web/resources/js/main.js"></script>
 <script type="text/javascript">
 $(function(){
 	var sell_list = '';
+	
+	$('#header').css('position', 'relative');
+	$('#pub_article').css('top', '-166px');
+	$('#header').css('z-index', '1');
+	$('#pub_article').css('position', 'relative');
 	
 	$.getJSON('/web/shop/selectDesc', function(data){
 	 	$.each(data.list, function(i, selectDesc){
@@ -247,7 +97,7 @@ $(function(){
 			+				'</div>'
 			+				'<div class="choose">'
 			+					'<ul class="nav nav-pills nav-justified">'
-			+						'<li><a href="#"><i class="fa fa-plus-square"></i>위시리스트에 담기</a></li>'
+			+						'<li><a onclick="addWishlist('+selectDesc.seq+')"><i class="fa fa-plus-square"></i>위시리스트에 담기</a></li>'
 			+					'</ul>'
 			+				'</div>'
 			+			'</div>'
@@ -267,7 +117,7 @@ $(function(){
 			+				'</div>'
 			+				'<div class="choose">'
 			+					'<ul class="nav nav-pills nav-justified">'
-			+						'<li><a href="#"><i class="fa fa-plus-square"></i>위시리스트에 담기</a></li>'
+			+						'<li><a onclick="addWishlist('+selectDesc.seq+')"><i class="fa fa-plus-square"></i>위시리스트에 담기</a></li>'
 			+					'</ul>'
 			+				'</div>'
 			+			'</div>'

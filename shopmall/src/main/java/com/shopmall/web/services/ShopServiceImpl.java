@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.shopmall.web.controllers.ShopController;
 import com.shopmall.web.domains.Command;
 import com.shopmall.web.domains.DetailImageDTO;
+import com.shopmall.web.domains.MemberShopDTO;
 import com.shopmall.web.domains.Retval;
 import com.shopmall.web.domains.ShopDTO;
 import com.shopmall.web.mappers.MemberMapper;
@@ -101,5 +102,35 @@ public class ShopServiceImpl implements ShopService {
 	@Override
 	public int updateCount(Command command) {
 		return (sqlSession.getMapper(ShopMapper.class).updateCount(command) != 0) ? 1 : 0;
+	}
+
+	@Override
+	public int addWishlist(Command command) {
+		ShopMapper mapper = sqlSession.getMapper(ShopMapper.class);
+		return mapper.addWishlist(command);
+	}
+
+	@Override
+	public MemberShopDTO selectWishOne(Command command) {
+		ShopMapper mapper = sqlSession.getMapper(ShopMapper.class);
+		return mapper.selectWishOne(command);
+	}
+
+	@Override
+	public List<MemberShopDTO> selectWishAll(Command command) {
+		ShopMapper mapper = sqlSession.getMapper(ShopMapper.class);
+		return mapper.selectWishAll(command);
+	}
+
+	@Override
+	public int wishCount(Command command) {
+		ShopMapper mapper = sqlSession.getMapper(ShopMapper.class);
+		return mapper.wishCount(command);
+	}
+
+	@Override
+	public int deleteWish(Command command) {
+		ShopMapper mapper = sqlSession.getMapper(ShopMapper.class);
+		return mapper.deleteWish(command);
 	}
 }

@@ -11,6 +11,6 @@ import lombok.Setter;
 @Component
 @Lazy
 public class MemberShopDTO {
-	@Getter @Setter private int seq, price, count;
+	@Getter @Setter private int seq, price, count, seq_sell_list;
 	@Getter @Setter private String id, date, title, image;
 }

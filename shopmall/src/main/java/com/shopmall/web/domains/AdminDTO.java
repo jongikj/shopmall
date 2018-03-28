@@ -10,7 +10,6 @@ import lombok.Setter;
 @Data
 @Component
 @Lazy
-public class Command {
-	@Getter @Setter private String keyField, keyword, id;
-	@Getter @Setter private int seq, count, start, end;
+public class AdminDTO {
+	@Getter @Setter private boolean admin;
 }

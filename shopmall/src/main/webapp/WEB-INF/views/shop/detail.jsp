@@ -39,6 +39,9 @@
 							</span>
 							<p><b>장르:</b> ${genre}</p>
 							<p><b>남은 수량:</b> ${count}</p>
+							<button id="add_wishlist" style="background: #FE980F; color: white; border-radius: 0;" class="btn">
+								<i class="glyphicon glyphicon-star"></i> 위시리스트에 담기
+							</button>
 						</div><!--/product-information-->
 					</div>
 				</div><!--/product-details-->
@@ -96,10 +99,17 @@ $(function(){
 				detail_image += '<div class="carousel-inner">';
 				
 				$.each(data2.list, function(j,  selectDetailImage){
-					detail_image += 
-					    '<div class="item slide_image' + j + '">'
-+					      '<img src="' + selectDetailImage.image_url + '">'
-+						'</div>';	
+					if(selectDetailImage.image_url.split(':')[0] === 'http' || selectDetailImage.image_url.split(':')[0] === 'https') {
+						detail_image += 
+						    '<div class="item slide_image' + j + '">'
+	+					      '<img src="' + selectDetailImage.image_url + '">'
+	+						'</div>';
+					} else {
+						detail_image += 
+						    '<div class="item slide_image' + j + '">'
+	+					      '<img src="/web/resources/img/detail/' + selectDetailImage.image_url + '">'
+	+						'</div>';	
+					}
 				});
 				
 				detail_image +=
@@ -124,5 +134,54 @@ $(function(){
 $('#detail_buy').click(function() {
 	addBuy(${seq}, $('#detail_count').val());
 	location.href = '/web/shop/buy';
+});
+
+$('#add_wishlist').click(function() {
+	$.ajax({
+		url : '/web/member/session',
+		async : false,
+		success : function(session) {
+			if(session.id == null) {
+				alert('로그인을 해주세요.');
+			} else {
+				$.ajax({
+					url : '/web/shop/selectWishOne',
+					async : false,
+					type : 'post',
+					data : {
+						seq : ${seq},
+						id : session.id
+					},
+					success : function(wish) {
+						if(wish.seq_sell_list === undefined) {
+							$.ajax({
+								url : '/web/shop/addWishlist',
+								async : false,
+								type : 'post',
+								data : {
+									seq : ${seq},
+									id : session.id	
+								},
+								success : function() {
+									alert('위시리스트에 추가되었습니다.');
+								},
+								error : function() {
+									alert('위시리스트 추가 중 에러 발생');
+								}
+							});
+						} else {
+							alert('이미 위시리스트에 있는 상품입니다.');
+						}
+					},
+					error : function() {
+						alert('위시리스트 중복 체크중 에러 발생');
+					}
+				});	
+			}
+		},
+		error : function() {
+			alert('세션 읽는중 에러 발생');
+		}
+	});
 });
 </script>

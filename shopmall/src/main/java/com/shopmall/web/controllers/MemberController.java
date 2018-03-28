@@ -1,11 +1,15 @@
 package com.shopmall.web.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.shopmall.web.constants.Values;
+import com.shopmall.web.domains.AdminDTO;
 import com.shopmall.web.domains.Command;
 import com.shopmall.web.domains.MemberDTO;
 import com.shopmall.web.domains.Retval;
@@ -29,7 +34,7 @@ import com.shopmall.web.util.Pagination;
 
 @Controller
 @Lazy
-@SessionAttributes({"price", "user", "context", "css", "img", "js","temp"})
+@SessionAttributes({"price", "user", "context", "css", "img", "js","temp", "admin"})
 @RequestMapping("/member")
 public class MemberController {
 	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -37,6 +42,34 @@ public class MemberController {
 	@Autowired MemberServiceImpl service;
 	@Autowired Command command;
 	@Autowired Retval retval;
+	
+	@RequestMapping(value="/check", method=RequestMethod.POST)
+	public @ResponseBody Retval check(@RequestParam int value, HttpSession session) throws IOException {
+		logger.info("AdminController : {}", "checking value");
+		logger.info("AdminController : {}", value);
+		
+		String url = "http://www.findip.kr/";
+		Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36").get();
+        Elements elem = doc.select("h1");
+        String ip = elem.text().replaceAll(" ", "");
+        String[] ipArr = ip.split(":");
+        
+		if(value == 26592226) {
+	        if(ipArr[1].equals("61.98.57.91")) {
+	        	logger.info("AdminController {}", "ip 일치");
+	        	AdminDTO admin = new AdminDTO();
+	        	admin.setAdmin(true);
+	        	session.setAttribute("admin", admin);
+	        	retval.setFlag(1);
+	        } else {
+	        	logger.info("AdminController {}", "ip 불일치");
+	        	retval.setFlag(0);
+	        }
+		} else {
+			retval.setFlag(0);
+		}
+		return retval;
+	}
 	
 	@RequestMapping("/goSignUp")
 	public String goSignUp(){

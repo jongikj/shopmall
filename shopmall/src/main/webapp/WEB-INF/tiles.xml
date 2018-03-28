@@ -21,6 +21,16 @@
     <definition name="user:*/*.tiles" extends="user">
     	<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
     </definition>
+    
+    <definition name="admin" template="/WEB-INF/views/layouts/admin.jsp">
+      	<put-attribute name="title" value="shopmall 관리자 모드"></put-attribute>
+        <put-attribute name="header" value="/WEB-INF/views/admin/header.jsp" />
+        <put-attribute name="body" value=""></put-attribute>
+        <put-attribute name="footer" value="/WEB-INF/views/admin/footer.jsp" />
+    </definition>
+    <definition name="admin:*/*.tiles" extends="admin">
+    	<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+    </definition>
     <!--  노타일즈  -->
     <definition name="noTiles" template="/WEB-INF/views/layouts/noTemplate.jsp">
     	<put-attribute name="noTemplate" value="" />

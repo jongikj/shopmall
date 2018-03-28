@@ -2594,3 +2594,21 @@ h2.title {
 .count {
 	cursor: pointer;
 }
+
+.admin_table tr td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.admin_table_desc {
+	font-size: 20px;
+	float: right;
+}
+
+.admin_table_input {
+	padding-left: 10px;
+}
+
+.admin_table_input > input {
+	float: left;
+}

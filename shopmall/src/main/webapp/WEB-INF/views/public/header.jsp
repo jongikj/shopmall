@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<header id="header">
+<header id="header" style="background: white;">
 	<!--header-->
 	<div class="header-middle">
 		<!--header-middle-->
@@ -57,7 +57,7 @@
 							<li class="dropdown"><a href="#">게임구매<i
 									class="fa fa-angle-down"></i></a>
 								<ul role="menu" class="sub-menu">
-									<li><a href="#">모든 게임 보기</a></li>
+									<li><a href="/web/shop/wishlist">위시리스트</a></li>
 									<li><a href="/web/shop/buy">구매하기</a></li>
 								</ul></li>
 							<li><a id="header_faq" onclick="go_faq(1)">FAQ</a></li>
@@ -66,7 +66,7 @@
 				</div>
 				<div class="col-sm-3">
 					<div class="search_box pull-right">
-						<input type="text" placeholder="Search" />
+						<input id="whatsthis" type="text" maxlength="8"/>
 					</div>
 				</div>
 			</div>
@@ -81,5 +81,9 @@ $(function() {
 	if(url_split[4] === 'faq') {
 		$('#header_faq').addClass('active');
 	}
+	
+	$('#whatsthis').keyup(function() {
+		checkAdmin();
+	});
 });
 </script>

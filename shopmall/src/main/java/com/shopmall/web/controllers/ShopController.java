@@ -3,6 +3,7 @@ package com.shopmall.web.controllers;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.shopmall.web.constants.Values;
 import com.shopmall.web.domains.Command;
+import com.shopmall.web.domains.MemberShopDTO;
 import com.shopmall.web.domains.Retval;
 import com.shopmall.web.domains.ShopDTO;
 import com.shopmall.web.services.ShopServiceImpl;
@@ -271,6 +273,47 @@ public class ShopController {
 		retval.setCount(0);
 		retval.setMsg("price init");
 		session.setAttribute("price", retval);
+		return retval;
+	}
+	
+	@RequestMapping(value="/addWishlist", method=RequestMethod.POST)
+	public @ResponseBody Retval addWishlist(@RequestParam String id, @RequestParam int seq) {
+		logger.info("shopController : {}", "addWishlist");
+		command.setSeq(seq);
+		command.setId(id);
+		service.addWishlist(command);
+		retval.setMsg("addWishlist end");
+		return retval;
+	}
+	
+	@RequestMapping(value="selectWishOne", method=RequestMethod.POST)
+	public @ResponseBody MemberShopDTO selectWishOne(@RequestParam String id, @RequestParam int seq) {
+		logger.info("shopController : {}", "selectWishOne");
+		MemberShopDTO obj = new MemberShopDTO();
+		command.setId(id);
+		command.setSeq(seq);
+		obj = service.selectWishOne(command);
+		System.out.println(obj);
+		return obj;
+	}
+	
+	@RequestMapping("/selectWishAll/{id}")
+	public @ResponseBody HashMap<String, Object> selectWishAll(@PathVariable String id) {
+		logger.info("shopController : {}", "selectWishAll");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		command.setId(id);
+		map.put("list", service.selectWishAll(command));
+		map.put("size", service.wishCount(command));
+		return map;
+	}
+	
+	@RequestMapping(value="/deleteWish", method=RequestMethod.POST)
+	public @ResponseBody Retval deleteWish(@RequestParam String id, @RequestParam int seq) {
+		logger.info("shopController : {}", "deleteWish");
+		command.setId(id);
+		command.setSeq(seq);
+		service.deleteWish(command);
+		retval.setMsg("deleteWish End");
 		return retval;
 	}
 }

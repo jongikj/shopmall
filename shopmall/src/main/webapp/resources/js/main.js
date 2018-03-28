@@ -71,6 +71,12 @@ $(document).ready(function(){
 	});
 });
 
+function getContextPath(){
+    var offset=location.href.indexOf(location.host)+location.host.length;
+    var ctxPath=location.href.substring(offset,location.href.indexOf('/',offset+1));
+    return ctxPath;
+}
+
 var member = {
 	flag : flag = 0,
 	checkId : function(){
@@ -474,4 +480,106 @@ var finBuyList = {
 		getBuyArr : function() {
 			return buy_arr;
 		}
+}
+
+function addWishlist(seq) {
+	$.ajax({
+		url : '/web/member/session',
+		async : false,
+		success : function(session) {
+			if(session.id == null) {
+				alert('로그인을 해주세요.');
+			} else {
+				$.ajax({
+					url : '/web/shop/selectWishOne',
+					async : false,
+					type : 'post',
+					data : {
+						seq : seq,
+						id : session.id
+					},
+					success : function(wish) {
+						if(wish.seq_sell_list === undefined) {
+							$.ajax({
+								url : '/web/shop/addWishlist',
+								async : false,
+								type : 'post',
+								data : {
+									seq : seq,
+									id : session.id	
+								},
+								success : function() {
+									alert('위시리스트에 추가되었습니다.');
+								},
+								error : function() {
+									alert('위시리스트 추가 중 에러 발생');
+								}
+							});
+						} else {
+							alert('이미 위시리스트에 있는 상품입니다.');
+						}
+					},
+					error : function() {
+						alert('위시리스트 중복 체크중 에러 발생');
+					}
+				});	
+			}
+		},
+		error : function() {
+			alert('세션 읽는중 에러 발생');
+		}
+	});
+}
+
+function removeWish(id, seq) {
+	$.ajax({
+		url : '/web/shop/deleteWish',
+		async : false,
+		type : 'post',
+		data : {
+			id : id,
+			seq : seq
+		},
+		success : function() {
+			location.reload();
+		},
+		error : function() {
+			alert('위시리스트 삭제중 에러 발생');
+		}
+	});
+}
+
+function checkAdmin() {
+	if($('#whatsthis').val().length == 8) {
+		$.ajax({
+			url : '/web/member/check',
+			async : false,
+			type : 'post',
+			data : {value : $('#whatsthis').val()},
+			success : function(retval) {
+				if(retval.flag === 1) {
+					location.href = '/web/admin/';
+				} else {
+					// 관리자 코드가 일치하지 않을 경우 수행
+				}
+			},
+			error : function() {
+				alert('admin check error');
+			}
+		});
+		$('#whatsthis').val('');
+	}
+}
+
+function remove_image(num) {
+	$('#image_tr'+num+'').remove();
+}
+
+function change_file(num) {
+	$('#admin_image'+num+'').attr('type', 'file');
+}
+
+function change_url(num) {
+	$('#admin_image'+num+'').attr('type', 'text');
+	$('#admin_image'+num+'').attr('placeholder', '예) http://www.naver.com/image1');
 }
